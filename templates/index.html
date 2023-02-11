@@ -1,12 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    Hurray
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="main">
+<div class="container">
+    <h1 class="title_header">Welcome to CSE</h1>
+    <div class="main_body">
+    <!-- Upcoming Events -->
+    <div class="events row gap-4 justify-content-center">
+        {% if up_events %}
+            <h1>Upcoming Events</h1>
+            {% for event in up_events %}
+            <div class="event col-lg-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{event.name}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{event.desc}}</h6>
+                        <p class="lead">
+                            <span class="fw-bold">Event Date: </span>
+                            {% if event.event_date is not null %}
+                            {{event.event_date|date:"D d M Y"}}
+                            {% else %}
+                            TBD
+                            {% endif %}
+                        </p>
+                        <p class="lead">
+                            <span class="fw-bold">Token Distribution Start Date: </span>
+                            {% if event.token_dist_start is not null %}
+                            {{event.token_dist_start|date:"D d M Y"}}
+                            {% else %}
+                            TBD
+                            {% endif %}
+                        </p>
+                        <p class="lead">
+                            <span class="fw-bold">Token Distribution Start End: </span>
+                            {% if event.token_dist_end is not null %}
+                            {{event.token_dist_end|date:"D d M Y"}}
+                            {% else %}
+                            TBD
+                            {% endif %}
+                        </p>
+                        <p class="lead">
+                            <span class="fw-bold">Token Distribution Place: </span>
+                            {% if event.distribution_place is not null %}
+                            {{event.distribution_place}}
+                            {% else %}
+                            TBD
+                            {% endif %} 
+                        </p>
+                        <a href="#" class="card-link">Card link</a>
+                        <a href="#" class="card-link">Another link</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h1 class="lead">No Upcomiing Events</h1>
+        {% endif %}
+    </div>
+    <!-- Upcoming Events -->
+    <!-- Previous Events -->
+    <div class="events row gap-4 justify-content-center mt-4 prev_events">
+        {% if prev_events %}
+            <h1>Previous Events</h1>
+            {% for event in prev_events %}
+            <div class="event col-lg-5">
+                <div class="card">
+                    <div class="card-body">
+                    <h5 class="card-title">ICFL</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Football League</h6>
+                    <p class="lead">
+                        <span class="fw-bold">Event Date: </span>
+                        {% if event.event_date is not null %}
+                            {{event.event_date|date:"D d M Y"}}
+                        {% else %}
+                            TBD
+                        {% endif %}
+                    </p>
+                    <a class="card-link">Check Event</a>
+                    </div>
+                </div>
+                </div>
+            {% endfor %}
+        {% else %}
+                <h1 class="lead">No Previous Events</h1>
+        {% endif %}
+    <!-- Previous Events -->
+    </div>
+</div>
+</div>
+{% endblock body %}
+
