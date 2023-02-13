@@ -17,6 +17,14 @@ border-radius: 0.5rem;
 display: none;
 }
 
+.title_header {
+margin-bottom: 1rem;
+}
+
+.glutter {
+--bs-gutter-x:0;
+}
+
 .main {
 margin-top: 100px;
 }

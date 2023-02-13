@@ -26,7 +26,7 @@
                         <p class="lead">
                             <span class="fw-bold">Token Distribution Start Date: </span>
                             {% if event.token_dist_start is not null %}
-                            {{event.token_dist_start|date:"D d M Y"}}
+                            {{event.token_dist_start}}
                             {% else %}
                             TBD
                             {% endif %}
@@ -34,7 +34,7 @@
                         <p class="lead">
                             <span class="fw-bold">Token Distribution Start End: </span>
                             {% if event.token_dist_end is not null %}
-                            {{event.token_dist_end|date:"D d M Y"}}
+                            {{event.token_dist_end}}
                             {% else %}
                             TBD
                             {% endif %}
@@ -47,14 +47,13 @@
                             TBD
                             {% endif %} 
                         </p>
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
+                        <a href="{% url 'event_details' event.id %}" class="card-link">Go to Event</a>
                         </div>
                     </div>
                 </div>
             {% endfor %}
         {% else %}
-            <h1 class="lead">No Upcomiing Events</h1>
+            <h1 class="lead">No Upcoming Events</h1>
         {% endif %}
     </div>
     <!-- Upcoming Events -->
