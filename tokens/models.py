@@ -55,7 +55,7 @@ class Token(models.Model):
     is_printed = models.BooleanField(_("Printed"),default=False)
     is_activated = models.BooleanField(_("Activated"),default=False)
     student_id = models.CharField(_("Student Id"),max_length=8,null=True,blank=True)
-    # usage = models.IntegerField(_("Token Usage"),default=1,null=True,blank=True)
+    usage = models.IntegerField(_("Token Usage"),default=1,null=True,blank=True)
 
     class Meta:
         verbose_name_plural = "Tokens"

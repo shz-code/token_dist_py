@@ -175,7 +175,7 @@
                             <p class="mb-0 fw-normal">Total tokens generated - <span class="fw-bold">{{event.get_tokens.count}}</span> </p>
                             <p class="mb-0 fw-normal">Total tokens printed - <span class="fw-bold">{{event.get_printed_tokens.count}}</span></p>
                             <p class="mb-0 fw-normal">Total tokens activated - <span class="fw-bold">{{event.get_activated_tokens.count}}</span></p>
-                            <a href="" class="btn btn-sm btn-secondary w-100 mt-2">Details Analysis</a>
+                            <a href="{% url 'tokens:token_event' event.id%}" class="btn btn-sm btn-secondary w-100 mt-2">Details Analysis</a>
                         </div>
                     </div>               
                 </div>

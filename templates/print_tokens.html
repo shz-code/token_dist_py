@@ -45,12 +45,12 @@
                 </div>
                 <div class="token_body d-flex justify-content-between border-bottom">
                     <ul class="token_usage_print">
-                        <li>Entry</li>
-                        <li>Food</li>
-                        <li>Cultural Gala</li>
+                        {% for tag in event.get_tags %}
+                            <li>{{tag}}</li>
+                        {% endfor %}
                     </ul>
                     <img src=
-                    "https://chart.googleapis.com/chart?cht=qr&chl=%EventLink%&chs=100x100&chld=L|0"
+                    "https://chart.googleapis.com/chart?cht=qr&chl=http://127.0.0.1:8000/event/{{event.id}}&chs=100x100&chld=L|0"
                     class="qr-code img-responsive" /> 
                 </div>
                 <div class="token_footer d-flex justify-content-center">
