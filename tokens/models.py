@@ -35,6 +35,11 @@ class Event(models.Model):
         return tokens  
     
     @property
+    def get_tokens_non_printed_count(self):
+        tokens = self.token_set.filter(is_printed=False).count()
+        return tokens  
+    
+    @property
     def get_printed_tokens(self):
         tokens = self.token_set.filter(is_printed=True)
         return tokens  
@@ -50,6 +55,7 @@ class Token(models.Model):
     is_printed = models.BooleanField(_("Printed"),default=False)
     is_activated = models.BooleanField(_("Activated"),default=False)
     student_id = models.CharField(_("Student Id"),max_length=8,null=True,blank=True)
+    # usage = models.IntegerField(_("Token Usage"),default=1,null=True,blank=True)
 
     class Meta:
         verbose_name_plural = "Tokens"

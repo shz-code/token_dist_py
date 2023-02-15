@@ -5,9 +5,7 @@ from tokens.models import Event, Tag
 from users.models import User
 from django.utils.timezone import now
 import json
-import pytz
 from django.conf import settings
-from datetime import datetime
 # Create your views here.
 
 def dashboard(request):
@@ -33,24 +31,32 @@ def event(request, pk):
     user = request.user
     event = Event.objects.get(id=pk)
     token_status = "Token distribution has not started yet. Stay Tuned"
-    try:
-        start_date = event.token_dist_start
-        end_date = event.token_dist_end
-        place = event.distribution_place
 
-        current_date = now()
-        start_date = int(start_date.strftime('%Y%m%d%H%M'))
-        end_date = int(end_date.strftime('%Y%m%d%H%M'))
-        current_date = int(current_date.strftime('%Y%m%d%H%M'))
+    current_date = now()
+    current_date = int(current_date.strftime('%Y%m%d%H%M'))
+    
+    end_event = event.event_date
+    end_event = int(end_event.strftime('%Y%m%d%H%M'))
+    if current_date > end_event:
+        token_status = "Event Finished. Thanks for your co-operation"
+    else:
+        try:
+            start_date = event.token_dist_start
+            end_date = event.token_dist_end
+            place = event.distribution_place
 
-        if current_date >= start_date and current_date <= end_date:
-            token_status = "Token distribution started. Collect the token from " + place
-        elif current_date < start_date:
+            start_date = int(start_date.strftime('%Y%m%d%H%M'))
+            end_date = int(end_date.strftime('%Y%m%d%H%M'))
+            
+
+            if current_date >= start_date and current_date <= end_date:
+                token_status = "Token distribution started. Collect the token from " + place
+            elif current_date < start_date:
+                pass
+            elif current_date > end_date:
+                token_status = "Token distribution finished. Enjoy the event"
+        except:
             pass
-        elif current_date > end_date:
-            token_status = "Token distribution finished. Enjoy the event"
-    except:
-        pass
     # Common context
     context = {
             "event": event,

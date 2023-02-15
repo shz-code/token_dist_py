@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<h1 id="title" class="text-start">CSE foundation day</h1>
+<div class="meta_info">
+    <p class="lead fw-bold">Printing Time: <span class="fw-normal">{{dt}}</span></p>
+    <p class="lead fw-bold">Total pages: <span class="fw-normal">{{total_pgs}}</span></p>
+    <p class="lead fw-bold">Batch print: <span class="fw-normal">{{num}} tokens</span></p>
+    <p class="lead fw-bold">Tokens: <span class="fw-normal">{{start_token.token_serial}} - {{end_token.token_serial}}</span></p>
+    <p class="lead fw-bold">Tokens per page: <span class="fw-normal">10</span></p>
+    <h4 class="fw-bold border-bottom mt-2">Token Index</h4>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Page Number</th>
+            <th scope="col">Starting token id</th>
+            <th scope="col">Ending token id</th>
+            <th scope="col">Tokens</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for token in token_index %}
+            <tr class="table_row">
+                <th scope="row">{{token.page}}</th>
+                <td>{{token.starting_token}}</td>
+                <td>{{token.finish_token}}</td>
+                <td>{{token.count}}</td>
+            </tr>
+            {% endfor %}
+          <tr>
+            <th scope="row"></th>
+            <td></td>
+            <td colspan="2">Total Tokens &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {{num}}</td>
+          </tr>
+        </tbody>
+      </table>
+</div> 
+<div class="tokens_container">
+    <div class="row justify-content-between gap-2">
+        {% for token in tokens %}
+            <div class="token border border-gray">
+                <div class="token_headaer">
+                    <p class="fw-bold text-center">{{event}}</p>
+                </div>
+                <div class="token_body d-flex justify-content-between border-bottom">
+                    <ul class="token_usage_print">
+                        <li>Entry</li>
+                        <li>Food</li>
+                        <li>Cultural Gala</li>
+                    </ul>
+                    <img src=
+                    "https://chart.googleapis.com/chart?cht=qr&chl=%EventLink%&chs=100x100&chld=L|0"
+                    class="qr-code img-responsive" /> 
+                </div>
+                <div class="token_footer d-flex justify-content-center">
+                    <svg class="barcode barcode_{{forloop.counter0}}" data-token-id="{{token.token_serial}}"></svg>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>  
+{% endblock body %}
+
+{% block scripts %}
+    <script src="{% static 'js/js_barcode.js' %}"></script>
+    <script src="{% static 'js/paged.js' %}"></script>
+    <script>
+        const barcodes = document.querySelectorAll(".barcode");
+        for(i = 0;i < barcodes.length ; i++)
+        {
+            let cls = ".barcode_"+i;
+            let id = barcodes[i].getAttribute("data-token-id");
+            JsBarcode(cls, id);
+            barcodes[i].style.height = "100px";
+            barcodes[i].querySelector("rect").style.fill = "#ffffff00"
+        }
+    </script>
+{% endblock scripts %}
+
+

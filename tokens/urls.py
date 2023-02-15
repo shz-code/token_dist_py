@@ -4,7 +4,7 @@ from . import views
 app_name = 'tokens'
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('print/<int:num>', views.print, name='print'),
+    path('event/<int:pk>', views.token, name='token_event'),
+    path('print_token/<int:num>/<int:pk>', views.print_token, name='print_token'),
     path('scanner/', views.scanner, name='scanner'),
 ]

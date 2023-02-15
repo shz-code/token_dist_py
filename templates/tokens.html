@@ -1,12 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    Tokeeeeeens
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="main">
+    <div class="container">
+        <h1 class="title_header">Token Management for {{event.name}}</h1>
+        <div class="main_body">
+            <div class="row px-4 text-md-center">
+                <h3 class="mb-0 fw-bold">Total tokens generated for the event</h3>
+                <p class="fw-bold fs-3">-> {{event.get_tokens.count}}</p>
+            </div>
+            <div class="accordion" id="add_token">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="token_add_heading">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Generate Tokens
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="token_add_heading"
+                        data-bs-parent="#add_token">
+                        <div class="accordion-body">
+                            <form action="" class="text-center">
+                                <div class="lead d-flex gap-2">
+                                    <input type="number" class="form-control" id="name" name="name"
+                                        value="{{event.name}}">
+                                        <span class="fw-normal">/300</span>
+                                </div>
+                                <span class="fw-bold text-danger">*Maximam 300 tokens can be generated at a time to ensure performance</span>
+                                <div class="row mt-2 justify-content-center">
+                                    <button class="btn btn-warning col-6">Generate</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row px-4 mt-4 text-md-center">
+                <h3 class="mb-0 fw-bold">Total tokens printed for the event</h3>
+                <p class="fw-bold fs-3">-> {{event.get_printed_tokens.count}}</p>
+            </div>
+            <div class="accordion" id="print_token">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="token_print_heading">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
+                            Print Tokens
+                        </button>
+                    </h2>
+                    <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="token_print_heading"
+                        data-bs-parent="#print_token">
+                        <div class="accordion-body">
+                            <form action="" class="text-center">
+                                <div class="lead d-flex gap-2">
+                                    <input type="number" class="form-control" id="name" name="name"
+                                        value="{{event.name}}">
+                                </div>
+                                <span class="fw-bold text-success">*Enter the number of tokens to print</span>
+                                <div class="row mt-2 justify-content-center">
+                                    <button class="btn btn-success col-6">Print</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock body %}

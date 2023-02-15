@@ -111,3 +111,84 @@ display: block;
 .validity_check p {
 margin: 0;
 }
+
+h1#title {
+string-set: title content(text);
+}
+
+@page {
+size: 230mm 300mm;
+bleed: 6mm;
+marks: crop;
+margin-left: 5mm;
+margin-right: 5mm;
+margin-top: 5mm;
+margin-bottom: 5mm;
+@top-center {
+  content: string(title);
+  text-transform: uppercase;
+}
+@bottom-left {
+  content: "Page " counter(page) " of " counter(pages);
+}
+}
+.pagedjs_margin-content::after{
+  font-size: 11px;
+  font-style: italic;
+}
+.table{
+  border-collapse: collapse;
+  page-break-inside:auto;
+  table-layout: fixed;
+}
+.table .table_row{
+  width: 100%;
+  page-break-inside:avoid; 
+  page-break-after:avoid; 
+}
+
+.tokens_container {
+-moz-column-break-before: page;
+      break-before: page;
+}
+
+
+.token {
+position: relative;
+width: 420px;
+margin: 2px 0;
+}
+
+.token_body {
+height: 65px;
+}
+
+.token_usage_print {
+display: flex;
+}
+.token_usage_print li {
+list-style: disc;
+font-weight: bolder;
+margin: 0 1rem;
+}
+
+.token::before {
+content: "";
+position: absolute;
+top: 0;
+left: 0;
+height: 100%;
+width: 100%;
+background: url("https://th.bing.com/th/id/R.9022450cb9bd5c25aa83792341c1d93e?rik=pyPsMUjo7%2fTeLg&riu=http%3a%2f%2fcse.iubat.edu%2fwp-content%2fuploads%2f2019%2f06%2fiubat_cse-logo.png&ehk=EDxgn3M75GwbAI3b1Fwn7FLCfXN4NLEy3HGYtpFFQO8%3d&risl=&pid=ImgRaw&r=0") no-repeat center;
+opacity: 0.1;
+}
+
+.token_body {
+position: relative;
+}
+
+.qr-code {
+position: absolute;
+bottom: 0;
+right: 0;
+}
