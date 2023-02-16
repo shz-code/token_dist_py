@@ -7,6 +7,8 @@ from django.utils.timezone import now
 import json
 from django.conf import settings
 import time
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -149,3 +151,36 @@ def delete_event(request):
         id = data['event_id']
         # Event.objects.get(id=id).delete()
     return JsonResponse({"msg":"Deleted"},safe=False)
+
+
+def create_user(request):
+    return render(request, "create_user.html")
+
+def create_user_post(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        name = data['name']
+        username = data['username']
+        phone = data['phone']
+        email = data['email']
+        password = data['password']
+        adm = data['adm']
+        if adm:
+            User.objects.create(
+                name = name,
+                phone = phone,
+                username = username,
+                email = email,
+                password = make_password(password),
+                is_admin = True,
+                is_executive = False
+            )
+        else:
+            User.objects.create(
+                name = name,
+                phone = phone,
+                username = username,
+                email = email,
+                password = make_password(password),
+            )
+    return JsonResponse({"msg":"Done"},safe=False)
