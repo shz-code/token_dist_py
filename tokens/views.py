@@ -4,6 +4,7 @@ from django.http import JsonResponse, HttpResponse
 import math
 import json
 from django.utils.timezone import now
+import time
 
 # Create your views here.
 def token(request, pk):
@@ -35,9 +36,16 @@ def print_token(request, num, pk):
 
     total_pgs = math.ceil(num/10)
 
-
-    st = tokens[0].token_serial
-    last_ck = tokens[num-1].token_serial
+    try:
+        st = tokens[0].token_serial
+        last_ck = tokens[num-1].token_serial
+        start_token = tokens[0].token_serial
+        end_token = tokens[num-1].token_serial
+    except:
+        st = 0
+        last_ck = 0
+        start_token = 0
+        end_token = 0
 
     if total_pgs <= 17:
         meta_pg = 1
@@ -60,8 +68,8 @@ def print_token(request, num, pk):
         "num": num,
         "event": event,
         "tokens": tokens,
-        "start_token": tokens[0],
-        "end_token": tokens[num-1],
+        "start_token": start_token,
+        "end_token": end_token,
         "token_index": token_index,
         "total_pgs": total_pgs+meta_pg,
         "dt": dt
@@ -75,12 +83,29 @@ def generate_tokens(request):
         event_id = data['event_id']
         event = Event.objects.get(id=event_id)
 
+        bulk_list = list()
+
         num = int(num)
         if num > 300:
             num = 300
         for i in range(num):
-            Token.objects.create(
-                event = event,
-                usage = event.token_usage
+            bulk_list.append(
+                Token(event=event,usage = event.token_usage)
             )
+        Token.objects.bulk_create(bulk_list)
     return JsonResponse({"msg":"Ok"}, safe=False)
+
+def update_print_status(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        num = data['total_tokens']
+        starting_token_id = data['s_token_id']
+        ending_token_id = int(starting_token_id) + int(num)
+        start = time.time()
+        for i in range(int(starting_token_id),ending_token_id):
+            token = Token.objects.get(token_serial=i)
+            token.is_printed = True
+            token.save()
+        end = time.time()
+        print(end-start)
+    return JsonResponse({"msg":"Done"}, safe=False)

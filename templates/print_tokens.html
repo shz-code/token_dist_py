@@ -2,12 +2,18 @@
 {% load static %}
 
 {% block body %}
-<h1 id="title" class="text-start">CSE foundation day</h1>
+<h1 id="title" class="text-start">{{event.name}}</h1>
 <div class="meta_info">
+    <div id="print_conf">
+        <button type="button" class="btn btn-outline-secondary" onclick="qc()">Print Complete</button>
+    </div>
+    <div id="notification">
+
+    </div>
     <p class="lead fw-bold">Printing Time: <span class="fw-normal">{{dt}}</span></p>
     <p class="lead fw-bold">Total pages: <span class="fw-normal">{{total_pgs}}</span></p>
     <p class="lead fw-bold">Batch print: <span class="fw-normal">{{num}} tokens</span></p>
-    <p class="lead fw-bold">Tokens: <span class="fw-normal">{{start_token.token_serial}} - {{end_token.token_serial}}</span></p>
+    <p class="lead fw-bold">Tokens: <span class="fw-normal">{{start_token}} - {{end_token}}</span></p>
     <p class="lead fw-bold">Tokens per page: <span class="fw-normal">10</span></p>
     <h4 class="fw-bold border-bottom mt-2">Token Index</h4>
     <table class="table">
@@ -58,6 +64,7 @@
                 </div>
             </div>
         {% endfor %}
+        {% csrf_token %}
     </div>
 </div>  
 {% endblock body %}
@@ -67,6 +74,10 @@
     <script src="{% static 'js/paged.js' %}"></script>
     <script>
         const barcodes = document.querySelectorAll(".barcode");
+        let notification = document.querySelector("#notification"),
+        printBtn = document.querySelector("#print_btn");
+        csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
         for(i = 0;i < barcodes.length ; i++)
         {
             let cls = ".barcode_"+i;
@@ -74,6 +85,31 @@
             JsBarcode(cls, id);
             barcodes[i].style.height = "100px";
             barcodes[i].querySelector("rect").style.fill = "#ffffff00"
+        }
+
+        function qc() {
+            let res = confirm("Printing Done? Click OK to update tokens status and wait for a few moment.");
+            if(res)
+            {
+                console.log("Done");   
+                fetch("/tokens/update_print_status/", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrf,
+                    },
+                    body: JSON.stringify({ 's_token_id': "{{start_token}}", 'total_tokens': "{{num}}" })
+                })
+                .then(async (response) => {
+                    let res = await response.json();
+                    alert("Status updated");
+                    window.location.reload();
+                })
+                .catch(err => {
+                    alert("Error. Try again.")
+                    console.log(err)
+                });
+            }
         }
     </script>
 {% endblock scripts %}

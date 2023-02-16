@@ -1,12 +1,17 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from users.models import EventPermission
-from tokens.models import Event, Tag
+from tokens.models import Event, Tag, Token
 from users.models import User
 from django.utils.timezone import now
 import json
 from django.conf import settings
+import time
+
 # Create your views here.
+
+def index(request):
+    return HttpResponse("Index")
 
 def dashboard(request):
     events = Event.objects.all()
@@ -83,15 +88,64 @@ def event(request, pk):
             return render(request, "event_executive.html", context)
     else:
         return render(request, "event.html", context)
-    
 
 def event_update(request):
     if request.method == "POST":
-        data = json.loads(request.body)
-        date = data['date']
-        time = data['time']
+        pk = request.POST.get('pk')
+        name = request.POST.get('name')
+        place = request.POST.get('place')
+        date = request.POST.get('date')
+        time = request.POST.get('time')
+        token_start_date = request.POST.get('token_start_date')
+        token_start_time = request.POST.get('token_start_time')
+        token_end_date = request.POST.get('token_end_date')
+        token_end_time = request.POST.get('token_end_time')
+        desc = request.POST.get('desc')
+        usage = request.POST.get('usage')
+        
         time = date+" "+time+":00.000000"
-        event = Event.objects.get(id=1)
+        token_start_time = token_start_date+" "+token_start_time+":00.000000"
+        token_end_time = token_end_date+" "+token_end_time+":00.000000"
+
+        event = Event.objects.get(id = pk)
+        tags_count = Tag.objects.all().count()
+
+        
+        if int(usage) <= tags_count:
+            if int(usage) != int(event.token_usage):
+                Token.objects.filter(event=event, usage = event.token_usage).delete()
+                event.token_usage = usage
+
+        tags = request.POST.getlist('tags')
+        if tags != 'None':    
+            if len(tags) == int(event.token_usage):
+                event.tags.clear()
+                for tag in tags:
+                    event.tags.add(tag)
+
+        executives = request.POST.getlist('users')
+        if executives != 'None':    
+            EventPermission.objects.filter(event=event).delete()
+            for executive in executives:
+                user = User.objects.get(id=executive)
+                EventPermission.objects.create(
+                    event = event,
+                    user = user
+                )
+
+        event.name = name
+        event.distribution_place = place
         event.event_date = time
+        event.token_dist_start = token_start_time
+        event.desc = desc
+
         event.save()
-    return JsonResponse({'msg': "HI"}, safe=False)
+
+    return redirect(f'/event/{pk}')
+
+def delete_event(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        id = data['event_id']
+        # Event.objects.get(id=id).delete()
+    return JsonResponse({"msg":"Deleted"},safe=False)

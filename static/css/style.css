@@ -13,6 +13,10 @@ box-shadow: 3px 3px 20px 5px rgba(0, 0, 0, 0.192);
 border-radius: 0.5rem;
 }
 
+select{
+  height: 150px;
+}
+
 .drawingBuffer {
 display: none;
 }
@@ -26,7 +30,7 @@ margin-bottom: 1rem;
 }
 
 .main {
-margin-top: 100px;
+margin-top: 150px;
 }
 
 .main_body {
@@ -135,6 +139,15 @@ margin-bottom: 5mm;
 .pagedjs_margin-content::after{
   font-size: 11px;
   font-style: italic;
+}
+.meta_info {
+  position: relative;
+}
+
+#print_conf {
+  position: absolute;
+  top: 20px;
+  right: 0;
 }
 .table{
   border-collapse: collapse;

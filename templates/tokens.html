@@ -87,7 +87,7 @@
             printBtn = document.querySelector("#print_btn"),
             notification = document.querySelector("#notification");
 
-        csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        const csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value;
 
         const spinner = () => {
             return `
