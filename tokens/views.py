@@ -23,9 +23,6 @@ def token(request, pk):
     }
     return render(request, "tokens.html", context)
 
-def scanner(request):
-    return render(request, "scanner.html")
-
 def print_token(request, num, pk):
     event = Event.objects.get(id=pk)
     count = event.get_tokens_non_printed_count
@@ -108,4 +105,25 @@ def update_print_status(request):
             token.save()
         end = time.time()
         print(end-start)
+    return JsonResponse({"msg":"Done"}, safe=False)
+
+def scanner_dist(request, pk):
+    event = Event.objects.get(id=pk)
+    return render(request, "scanner_dist.html")
+
+def scanner_receive(request, pk):
+    event = Event.objects.get(id=pk)
+    return render(request, "scanner_receive.html")
+
+def token_activate(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        code = data['code']
+        stu_id = data['stu_id']
+    return JsonResponse({"msg":"Done"}, safe=False)
+
+def token_receive(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        code = data['code']
     return JsonResponse({"msg":"Done"}, safe=False)

@@ -62,3 +62,15 @@ class Token(models.Model):
     
     def __str__(self):
         return f'{self.event} - {self.token_serial}'
+    
+
+class StudentList(models.Model):
+    student_id = models.CharField(_("Student Id"),max_length=8,unique=True, null=True, blank=True)
+    name = models.CharField(_("Name"),max_length=50,null=True,blank=True)
+    event = models.ForeignKey(Event,verbose_name=_("Event"),on_delete=models.CASCADE,null=True,blank=True)
+    
+    class Meta:
+        verbose_name_plural = "Student List"
+    
+    def __str__(self):
+        return f'{self.student_id} for - {self.event}'

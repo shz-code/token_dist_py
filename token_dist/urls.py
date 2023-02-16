@@ -14,6 +14,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view() , name='logout'),
     path('tokens/',include('tokens.urls', namespace='tokens')),
     path('event/<int:pk>',views.event, name="event_details"),
+    path('event/studentlist/<int:pk>',views.event_stulist, name="studentlist"),
     path('event_update/',views.event_update, name="event_update"),
     path('delete_event/',views.delete_event, name="delete_event"),
     path('create_user/',views.create_user, name="create_user"),

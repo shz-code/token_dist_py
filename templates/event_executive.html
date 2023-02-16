@@ -6,13 +6,16 @@
     <div class="container">
         <h1 class="title_header">Event Details</h1>
         <div class="main_body px-4">
+            <div class="row text-lg-center">
+                <p class="text-success fw-bold lead">{{token_status}}</p>
+            </div>
             <div class="row">
                 <div class="col-lg-6">
-                    <p class="fw-bold lead">Event Name: <span class="lead">{{event.name}}</span></p>
+                    <p class="fw-bold lead">Event Name: <span class="lead fw-normal">{{event.name}}</span></p>
                 </div>
                 <div class="col-lg-6">
                     <p class="fw-bold lead">Event Date: 
-                        <span class="lead">
+                        <span class="lead fw-normal">
                             {% if event.event_date is not null %}
                             {{event.event_date|date:"D d M Y"}}
                             {% else %}
@@ -24,7 +27,7 @@
             </div>
             <div class="row">
                 <p class="fw-bold lead">Event Details: 
-                    <span class="lead">
+                    <span class="lead fw-normal">
                         {% if event.desc is not null %}
                         {{event.desc}}
                         {% else %}
@@ -33,13 +36,10 @@
                     </span>
                 </p>
             </div>
-            <div class="row text-lg-center">
-                <p class="text-success fw-bold lead">{{token_status}}</p>
-            </div>
             <div class="row">
                 <div class="col-lg-6">
                     <p class="fw-bold lead">Token Distribution Start: 
-                        <span class="lead">
+                        <span class="lead fw-normal">
                             {% if event.token_dist_start is not null %}
                             {{event.token_dist_start}}
                             {% else %}
@@ -50,7 +50,7 @@
                 </div>
                 <div class="col-lg-6">
                     <p class="fw-bold lead">Token Distribution End: 
-                        <span class="lead">
+                        <span class="lead fw-normal">
                         {% if event.token_dist_end is not null %}
                         {{event.token_dist_end}}
                         {% else %}
@@ -61,13 +61,14 @@
                 </div>
             </div>
             <div class="row">
-                <p class="lead text-lg-center">
-                    <span class="fw-bold">Distribution Place: </span>
-                    {% if event.distribution_place is not null %}
-                    {{event.distribution_place}}
-                    {% else %}
-                    TBD
-                    {% endif %} 
+                <p class="fw-bold lead">Distribution Place: 
+                    <span class="fw-normal lead">
+                        {% if event.distribution_place is not null %}
+                        {{event.distribution_place}}
+                        {% else %}
+                        TBD
+                        {% endif %} 
+                    </span>
                 </p>
             </div>
         </div>
@@ -79,10 +80,10 @@
             </div>
             <div class="row text-center gap-4 justify-content-center">
                 <div class="col-md-5">
-                    <a href="" class="btn btn-primary btn-lg fw-bold">Token Distribution</a>
+                    <a href="{% url 'tokens:scanner_dist' event.id %}" class="btn btn-primary btn-lg fw-bold">Token Distribution</a>
                 </div>
                 <div class="col-md-5">
-                    <a href="" class="btn btn-warning btn-lg fw-bold">Token Receive</a>
+                    <a href="{% url 'tokens:scanner_receive' event.id %}" class="btn btn-warning btn-lg fw-bold">Token Receive</a>
                 </div>
             </div>
             <div class="row mt-4">

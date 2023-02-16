@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="main">
+    <div class="container">
+        <h1 class="title_header">Token Distribution</h1>
+        <div id="notification">
+
+        </div>
+        <div class="main_body">
+            <div class="scanner">
+                <div id="interactive" class="viewport"></div>
+                <div class="btns">
+                    <button id="scan_btn" data-status="false" class="btn btn-primary">Scan now</button>
+                    <button id="stop_btn" class="btn btn-danger">Stop scan</button>
+                </div>
+                <div class="lead text-center">Status: <span id="v" class="fw-bold">Click Scan Now</span></div>
+                <div class="svg_output">
+                    <svg id="barcode"></svg>
+                </div>
+                <div class="validity_check text-center">
+                    <div class="row justify-content-center">
+                        <div class="mt-3 col-md-6">
+                            {% csrf_token %}
+                            <label for="student_id" class="form-label">Enter student Id</label>
+                            <input type="number" class="form-control" id="student_id" name="student_id">
+                          </div>
+                    </div>
+                    <button class="btn btn-primary mt-3" id="activate_btn"> Click Here to activate token id <span id="barcode_res"></span> for <span id="stu_res"></span> </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}
+
+{% block scripts %}
+<script src="{% static 'js/quagga.js' %}"></script>
+<script src="{% static 'js/js_barcode.js' %}"></script>
+<script src="{% static 'js/app.js' %}"></script>
+<script>
+    let studentId = document.querySelector("#student_id"),
+    studentRes = document.querySelector("#stu_res"),
+    activateBtn = document.querySelector("#activate_btn");
+
+    const csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+    activateBtn.addEventListener("click", (e) => {
+        let code = validityCheck.getAttribute("code");
+        
+        activateBtn.setAttribute("disabled", true);
+
+        fetch("/tokens/token_activate/", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf,
+            },
+            body: JSON.stringify({'code': code, 'stu_id': studentId.value})
+        })
+        .then(async (response) => {
+            let res = await response.json();
+            notification.innerHTML = alert_trigger("success",`${code} activated successfully.`)
+            activateBtn.removeAttribute("disabled");
+            validityCheck.classList.remove("show");
+            console.log(res.msg);
+        })
+        .catch(err => {
+            console.log(err)
+        });
+    })
+
+    studentId.addEventListener("input",(e)=>{
+        studentRes.innerHTML = studentId.value;
+    });
+</script>
+{% endblock scripts %}

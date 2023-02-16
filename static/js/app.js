@@ -5,6 +5,7 @@ let scanBtn = document.getElementById("scan_btn"),
     barcodeRes = document.querySelector("#barcode_res");
 
 bar_code.style.display = "none";
+
 const quaggaInit = () => {
     Quagga.init(
         {
@@ -16,7 +17,6 @@ const quaggaInit = () => {
                     facingMode: "environment",
                 },
             },
-            frequency: 1,
             locator: {
                 patchSize: "medium",
                 halfSample: true,
@@ -64,9 +64,16 @@ const quaggaInit = () => {
     );
 };
 
+const alert_trigger = (type, msg) =>{
+    return `
+        <div class="alert alert-${type}" role="alert">
+            <p class="mb-0">${msg}</p>
+        </div>`;
+}
 
 scanBtn.addEventListener("click", () => {
     let status = scanBtn.getAttribute("data-status");
+    notification.innerHTML = alert_trigger("none",``)
     if (status === "false") {
         document.getElementById("interactive").style.display = "block";
         quaggaInit();
@@ -83,15 +90,11 @@ stopBtn.addEventListener("click", () => {
     }
 });
 
-const check_barcode = () =>{
-    let code = validityCheck.getAttribute("code");
-    console.log(code);
-}
-
 Quagga.onDetected(function (result) {
     document.getElementById("v").innerHTML = result.codeResult.code;
     bar_code.style.display = "block";
     JsBarcode("#barcode", `${result.codeResult.code}`);
+    document.getElementById("barcode").querySelector("rect").style.fill = "#ffffff00"
     validityCheck.classList.add("show");
     validityCheck.setAttribute("code",result.codeResult.code);
     barcodeRes.innerHTML = result.codeResult.code

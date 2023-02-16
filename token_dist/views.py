@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from users.models import EventPermission
-from tokens.models import Event, Tag, Token
+from tokens.models import Event, Tag, Token, StudentList
 from users.models import User
 from django.utils.timezone import now
 import json
@@ -9,6 +9,7 @@ from django.conf import settings
 import time
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
+from tablib import Dataset
 
 # Create your views here.
 
@@ -75,9 +76,11 @@ def event(request, pk):
             tags = Tag.objects.all()
             users = User.objects.all().exclude(is_admin=True)
             epall = EventPermission.objects.filter(event=event)
+            stu_list = StudentList.objects.filter(event = event).count()
             context["tags"] = tags
             context["users"] = users
             context["epall"] = epall
+            context["stu_list"] = stu_list
             return render(request, "event_admin.html", context)
         else:
             try:
@@ -90,6 +93,40 @@ def event(request, pk):
             return render(request, "event_executive.html", context)
     else:
         return render(request, "event.html", context)
+
+def event_stulist(request, pk):
+    event = Event.objects.get(id = pk)
+    stu_list = StudentList.objects.filter(event = event).count()
+    status = False
+    msg = ""
+    type = ""
+    context = {
+        "event":event,
+        "stu_list":stu_list,
+    }
+    
+    if request.method == "POST":
+        event = Event.objects.get(id = pk)
+        dataset = Dataset()
+        new_record = request.FILES.get("student_list")
+   
+        if not new_record.name.endswith('xlsx'):
+            status = True
+            msg = "Wrong file format."
+            type = "danger"
+            context["status"] = status
+            context["msg"] = msg
+            context["type"] = type
+            return render(request, "event_studentlist.html",context)
+        
+        data = dataset.load(new_record.read(),format="xlsx")
+        bulk_list = list()
+        for datum in data:
+            bulk_list.append(
+                StudentList(student_id=datum[1],name = datum[2],event = event)
+            )
+        StudentList.objects.bulk_create(bulk_list)
+    return render(request, "event_studentlist.html",context)
 
 def event_update(request):
     if request.method == "POST":
