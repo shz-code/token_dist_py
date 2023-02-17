@@ -1,6 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}Token Receive{% endblock title %}
+
+{% block bc %}
+<li class="breadcrumb-item active"><a href="{% url 'events' %}">Events</a></li>
+<li class="breadcrumb-item active"><a href="{% url 'event_details' event.id%}">Event Details</a></li>
+<li class="breadcrumb-item">Token Receive</li>
+{% endblock bc %}
+
+
 {% block body %}
 <div class="main">
     <div class="container">

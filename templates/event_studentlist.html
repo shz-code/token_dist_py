@@ -1,5 +1,14 @@
 {% extends 'base.html' %}
 
+{% block title %}{{event.name}}{% endblock title %}
+
+{% block bc %}
+<li class="breadcrumb-item active"><a href="{% url 'events' %}">Events</a></li>
+<li class="breadcrumb-item active"><a href="{% url 'event_details' event.id%}">Event Details</a></li>
+<li class="breadcrumb-item">Student List Management for Event</li>
+{% endblock bc %}
+
+
 {% block body %}
 <div class="main">
     <div class="container">

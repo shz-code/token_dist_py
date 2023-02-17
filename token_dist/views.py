@@ -14,9 +14,9 @@ from tablib import Dataset
 # Create your views here.
 
 def index(request):
-    return HttpResponse("Index")
+    return render(request, "index.html")
 
-def dashboard(request):
+def events(request):
     events = Event.objects.all()
     up_events = []
     prev_events = []
@@ -33,7 +33,7 @@ def dashboard(request):
         'up_events': up_events,
         'prev_events': prev_events
     }
-    return render(request, "index.html", context)
+    return render(request, "events.html", context)
 
 def event(request, pk):
     user = request.user
@@ -221,3 +221,7 @@ def create_user_post(request):
                 password = make_password(password),
             )
     return JsonResponse({"msg":"Done"},safe=False)
+
+
+def handle_page_not_found(request, exception):
+    return render(request, "404.html")

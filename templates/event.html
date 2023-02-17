@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}{{event.name}}{% endblock title %}
+
+{% block bc %}
+<li class="breadcrumb-item active"><a href="{% url 'events' %}">Events</a></li>
+<li class="breadcrumb-item">Event Details</li>
+{% endblock bc %}
+
 {% block body %}
 <div class="main">
     <div class="container">

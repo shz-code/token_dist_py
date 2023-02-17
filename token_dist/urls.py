@@ -6,11 +6,11 @@ from . import views
 from django.contrib.auth.views import LoginView , LogoutView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-    path('dashboard/', views.dashboard, name='dashboard'),
-    path('login/', LoginView.as_view() , name='login'),
-    # path('login/', LoginView.as_view(redirect_authenticated_user=True) , name='login'),
+    path('events/', views.events, name='events'),
+    # path('login/', LoginView.as_view() , name='login'),
+    path('login/', LoginView.as_view(redirect_authenticated_user=True) , name='login'),
     path('logout/', LogoutView.as_view() , name='logout'),
     path('tokens/',include('tokens.urls', namespace='tokens')),
     path('event/<int:pk>',views.event, name="event_details"),
@@ -22,3 +22,6 @@ urlpatterns = [
 ]
 
 urlpatterns += static(settings.STATIC_URL , document_root=settings.STATIC_ROOT)
+
+
+handler404 = views.handle_page_not_found
