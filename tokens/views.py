@@ -87,7 +87,7 @@ def generate_tokens(request):
             num = 300
         for i in range(num):
             bulk_list.append(
-                Token(event=event,usage = event.token_usage)
+                Token(event=event)
             )
         Token.objects.bulk_create(bulk_list)
     return JsonResponse({"msg":"Ok"}, safe=False)
