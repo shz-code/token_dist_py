@@ -70,9 +70,13 @@
                 </div>
                 <div class="token_body d-flex justify-content-between border-bottom">
                     <ul class="token_usage_print">
-                        {% for tag in event.get_tags %}
-                        <li>{{tag}}</li>
-                        {% endfor %}
+                        {% if event.token_usage == 1 %}
+                        <li>Food</li>
+                        {% endif %}
+                        {% if event.token_usage == 2 %}
+                        <li>Entry</li>
+                        <li>Food</li>
+                        {% endif %}
                     </ul>
                     <img src="https://chart.googleapis.com/chart?cht=qr&chl=https://token-dist-py.up.railway.app/event/{{event.id}}&chs=100x100&chld=L|0"
                         class="qr-code img-responsive" />
