@@ -1,7 +1,6 @@
 from pathlib import Path
 import environ
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=500)
+
 env = environ.Env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -71,7 +70,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-DATABASES['default'].update(db_from_env)
 
 
 # Password validation
