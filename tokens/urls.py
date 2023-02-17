@@ -11,5 +11,6 @@ urlpatterns = [
     path('scanner_dist/<int:pk>', views.scanner_dist, name='scanner_dist'),
     path('scanner_receive/<int:pk>', views.scanner_receive, name='scanner_receive'),
     path('token_activate/', views.token_activate, name='token_activate'),
+    path('token_activate_new/', views.token_activate_new, name='token_activate_new'),
     path('token_receive/', views.token_receive, name='token_receive'),
 ]

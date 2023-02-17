@@ -2,7 +2,8 @@ let scanBtn = document.getElementById("scan_btn"),
     stopBtn = document.getElementById("stop_btn"),
     bar_code = document.querySelector("#barcode"),
     validityCheck = document.querySelector(".validity_check"),
-    barcodeRes = document.querySelector("#barcode_res");
+    barcodeRes = document.querySelector("#barcode_res"),
+    newStudentReg = document.querySelector(".new_student_reg");;
 
 bar_code.style.display = "none";
 
@@ -73,7 +74,9 @@ const alert_trigger = (type, msg) =>{
 
 scanBtn.addEventListener("click", () => {
     let status = scanBtn.getAttribute("data-status");
-    notification.innerHTML = alert_trigger("none",``)
+    notification.innerHTML = alert_trigger("none",``);
+    if(newStudentReg) newStudentReg.classList.remove("show");
+    validityCheck.classList.remove("show");
     if (status === "false") {
         document.getElementById("interactive").style.display = "block";
         quaggaInit();

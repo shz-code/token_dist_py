@@ -130,28 +130,17 @@
                         <input type="number" class="form-control" value="{{event.token_usage}}" id="usage" name="usage">
                         <span class="fw-bold text-secondary" style="font-size: 14px;">*Maximum number of times one token can be redeemed.</span>
                         <br>
-                        <span class="fw-bold text-danger" style="font-size: 14px;">*If you change the usage than all previous tokens will be deleted. This can take a while.</span>
+                        <span class="fw-bold text-danger" style="font-size: 14px;">*If you change the usage than all previous tokens will be updated. This can take a while.</span>
                         <br>
-                        <span class="fw-bold text-secondary" style="font-size: 14px;">*Currently maximum token usage based on tags -> {{tags.count}}</span>
+                        <span class="fw-bold text-secondary" style="font-size: 14px;">*Currently maximum token usage based on the architecture -> 2</span>
                     </div>               
                     <div class="lead col-md-6">
                         <label for="tags" class="form-label fw-bold">Token usage purposes</label>
-                        <select class="form-select" aria-label="Usage Purposes" id="tags" name="tags" multiple>
-                            <optgroup label="Selected">
-                                {% if event.get_tags.count > 0 %}
-                                    {% for tag in event.get_tags %}                               
-                                        <option selected value="{{tag.id}}">{{tag.name}}</option>
-                                    {% endfor %}                          
-                                    {% else %}
-                                    <option value="None" >No Tags Selected</option>
-                                {% endif %}
-                                </optgroup>
-                                <optgroup label="All">
-                                {% for tag in tags %}
-                                         <option value="{{tag.id}}">{{tag.name}}</option>
-                                {% endfor %}
-                                </optgroup>
-                          </select>
+                          <br>
+                          <span class="fw-bold text-primary">*If token usage is 1 than the token will only act as food token.</span>
+                          <br>
+                          <span class="fw-bold text-primary">*If token usage is 2 than the token will act as entry and food token.</span>
+                          <br>
                     </div>               
                 </div>
                 <div class="row mt-2">

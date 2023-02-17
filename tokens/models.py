@@ -4,11 +4,11 @@ from datetime import datetime
 from django.utils.timezone import now  
 
 # Create your models here.
-class Tag(models.Model):
-    name = models.CharField(_("Name"),max_length=50,null=True,blank=True)
+# class Tag(models.Model):
+#     name = models.CharField(_("Name"),max_length=50,null=True,blank=True)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 class Event(models.Model):
     name = models.CharField(_("Event"),max_length=50,null=True,blank=True)
@@ -17,17 +17,17 @@ class Event(models.Model):
     token_dist_start = models.DateTimeField(_("Token Distribution Start"),null=True,blank=True)
     token_dist_end = models.DateTimeField(_("Token Distribution End"),null=True,blank=True)
     token_usage = models.IntegerField(_("Token Usage Limit"),default=0)
-    tags = models.ManyToManyField(Tag,blank=True)
+    # tags = models.ManyToManyField(Tag,blank=True)
     distribution_place = models.CharField(_("Distribution"),max_length=100,null=True,blank=True)
     desc = models.TextField(_("Description"),null=True,blank=True)
 
     def __str__(self):
         return self.name
     
-    @property
-    def get_tags(self):
-        tags = self.tags.all()
-        return tags  
+    # @property
+    # def get_tags(self):
+    #     tags = self.tags.all()
+    #     return tags  
     
     @property
     def get_tokens(self):
@@ -54,8 +54,9 @@ class Token(models.Model):
     token_serial = models.AutoField(_("Serial"),primary_key=True)
     is_printed = models.BooleanField(_("Printed"),default=False)
     is_activated = models.BooleanField(_("Activated"),default=False)
+    entry_flag = models.BooleanField(_("Entery Status"),default=False,null=True,blank=True)
+    food_flag = models.BooleanField(_("Food Status"),default=False,null=True,blank=True)
     student_id = models.CharField(_("Student Id"),max_length=8,null=True,blank=True)
-    usage = models.IntegerField(_("Token Usage"),default=1,null=True,blank=True)
 
     class Meta:
         verbose_name_plural = "Tokens"
@@ -65,9 +66,10 @@ class Token(models.Model):
     
 
 class StudentList(models.Model):
-    student_id = models.CharField(_("Student Id"),max_length=8,unique=True, null=True, blank=True)
+    student_id = models.CharField(_("Student Id"),max_length=8,null=True, blank=True)
     name = models.CharField(_("Name"),max_length=50,null=True,blank=True)
     event = models.ForeignKey(Event,verbose_name=_("Event"),on_delete=models.CASCADE,null=True,blank=True)
+    claimed = models.BooleanField(_("Token Claimed"),default=False,null=True,blank=True)
     
     class Meta:
         verbose_name_plural = "Student List"

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from users.models import EventPermission
-from tokens.models import Event, Tag, Token, StudentList
+from tokens.models import Event, Token, StudentList
 from users.models import User
 from django.utils.timezone import now
 import json
@@ -73,11 +73,11 @@ def event(request, pk):
     
     if user.is_authenticated:
         if user.is_admin:
-            tags = Tag.objects.all()
+            # tags = Tag.objects.all()
             users = User.objects.all().exclude(is_admin=True)
             epall = EventPermission.objects.filter(event=event)
             stu_list = StudentList.objects.filter(event = event).count()
-            context["tags"] = tags
+            # context["tags"] = tags
             context["users"] = users
             context["epall"] = epall
             context["stu_list"] = stu_list
@@ -147,20 +147,20 @@ def event_update(request):
         token_end_time = token_end_date+" "+token_end_time+":00.000000"
 
         event = Event.objects.get(id = pk)
-        tags_count = Tag.objects.all().count()
-
         
-        if int(usage) <= tags_count:
-            if int(usage) != int(event.token_usage):
-                Token.objects.filter(event=event, usage = event.token_usage).delete()
+        if int(usage) != int(event.token_usage):
+            if int(usage) > 1:
+                Token.objects.filter(event=event).update(
+                    entry_flag = True,
+                    food_flag = True
+                )
                 event.token_usage = usage
-
-        tags = request.POST.getlist('tags')
-        if tags != 'None':    
-            if len(tags) == int(event.token_usage):
-                event.tags.clear()
-                for tag in tags:
-                    event.tags.add(tag)
+            elif int(usage) == 1:
+                Token.objects.filter(event=event).update(
+                    entry_flag = False,
+                    food_flag = True
+                )
+            event.token_usage = usage
 
         executives = request.POST.getlist('users')
         if executives != 'None':    
