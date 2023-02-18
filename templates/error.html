@@ -2,7 +2,7 @@
 
 {% block body %}
 <div class="text-center">
-    <h1>404 - Requested page is missing.</h1>
+    <h1>{{msg}}</h1>
     <div class="redirect">
         <a href="{% url 'index' %}">Go to homepage</a>
     </div>

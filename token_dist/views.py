@@ -272,4 +272,22 @@ def create_user_post(request):
 
 
 def handle_page_not_found(request, exception):
-    return render(request, "404.html")
+    msg = "404 - Requested page not found."
+    context = {
+        "msg":  msg
+    }
+    return render(request, "error.html", context)
+
+def handle_server_error(request):
+    msg = "500 - Internal Server Error."
+    context = {
+        "msg" : msg
+    }
+    return render(request, "error.html", context)
+
+def handle_bad_request(request, exception):
+    msg = "400 - Bad Request."
+    context = {
+        "msg" : msg
+    }
+    return render(request, "error.html", context)
