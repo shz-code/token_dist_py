@@ -183,11 +183,18 @@ def event_update(request):
         desc = request.POST.get('desc')
         usage = request.POST.get('usage')
         
-        time = date+" "+time+":00.000000"
-        token_start_time = token_start_date+" "+token_start_time+":00.000000"
-        token_end_time = token_end_date+" "+token_end_time+":00.000000"
-
         event = Event.objects.get(id = pk)
+        
+        if time != "":
+            time = date+" "+time+":00.000000"
+            event.event_date = time
+        if token_start_date != "":
+            token_start_time = token_start_date+" "+token_start_time+":00.000000"
+            event.token_dist_start = token_start_time
+        if token_end_time != "":
+            token_end_time = token_end_date+" "+token_end_time+":00.000000"
+            event.token_dist_end = token_end_time
+
         
         if int(usage) != int(event.token_usage):
             if int(usage) > 1:
@@ -215,8 +222,6 @@ def event_update(request):
 
         event.name = name
         event.distribution_place = place
-        event.event_date = time
-        event.token_dist_start = token_start_time
         event.desc = desc
 
         event.save()
