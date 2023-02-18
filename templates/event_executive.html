@@ -81,39 +81,45 @@
         </div>
         <h3 class="mt-4 text-center">Event Management - Executive level</h3>
         <div class="main_body mt-4 px-4">
-            <div class="row text-center">
-                <h2 class="text-success fw-bold">Hi {{user.name}}</h2>
-                <p class="lead">You are assigned to manage the token distribution of this event</p>
-            </div>
-            <div class="row text-center gap-4 justify-content-center">
-                <div class="col-md-5">
-                    <a href="{% url 'tokens:scanner_dist' event.id %}" class="btn btn-primary btn-lg fw-bold">Token Distribution</a>
+            {% if token_status == "Event Finished. Thanks for your co-operation" %}
+                <div class="row text-center">
+                    <h3 class="fw-normal text-secondary">Event finished. Thanks for your co-operation</h3>
                 </div>
-                <div class="col-md-5">
-                    <a href="{% url 'tokens:scanner_receive' event.id %}" class="btn btn-warning btn-lg fw-bold">Token Receive</a>
+            {% else %}
+                <div class="row text-center">
+                    <h2 class="text-success fw-bold">Hi {{user.name}}</h2>
+                    <p class="lead">You are assigned to manage the token distribution of this event</p>
                 </div>
-            </div>
-            <div class="row mt-4">
-                {% if epall %}
-                    <p class="fw-bold text-center">Information of other executives assigned for token handling</p>
-                    {% for event in epall %}
-                    <div class="row my-2 justify-content-center text-lg-center gap-lg-0 gap-2 border-top border-bottom border-dark glutter">
-                        <div class="col-lg-4">
-                            <p class="fw-bold mb-0">{{event.user.name}}</p>
-                        </div>
-                        <div class="col-lg-4">
-                            <a class="fw-bold text-dark" href="tel:0{{event.user.phone}}">0{{event.user.phone}}</a>
-                        </div>
-                        <div class="col-lg-4">
-                            <p class="fw-bold mb-0">{{event.user.username}}</p>
-                        </div>
+                <div class="row text-center gap-4 justify-content-center">
+                    <div class="col-md-5">
+                        <a href="{% url 'tokens:scanner_dist' event.id %}" class="btn btn-primary btn-lg fw-bold">Token Distribution</a>
                     </div>
-                    {% endfor %}
-                {% else %}
-                    <p class="text-danger text-center fw-bold">Only you are assigned for this event.</p>
-                {% endif %}
+                    <div class="col-md-5">
+                        <a href="{% url 'tokens:scanner_receive' event.id %}" class="btn btn-warning btn-lg fw-bold">Token Receive</a>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    {% if epall %}
+                        <p class="fw-bold text-center">Information of other executives assigned for token handling</p>
+                        {% for event in epall %}
+                        <div class="row my-2 justify-content-center text-lg-center gap-lg-0 gap-2 border-top border-bottom border-dark glutter">
+                            <div class="col-lg-4">
+                                <p class="fw-bold mb-0">{{event.user.name}}</p>
+                            </div>
+                            <div class="col-lg-4">
+                                <a class="fw-bold text-dark" href="tel:0{{event.user.phone}}">0{{event.user.phone}}</a>
+                            </div>
+                            <div class="col-lg-4">
+                                <p class="fw-bold mb-0">{{event.user.username}}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-danger text-center fw-bold">Only you are assigned for this event.</p>
+                    {% endif %}
+                </div>
             </div>
-        </div>
+            {% endif %}
     </div>
 </div>
 {% endblock body %}
