@@ -3,13 +3,6 @@ from django.utils.translation import gettext_lazy as _
 from datetime import datetime  
 from django.utils.timezone import now  
 
-# Create your models here.
-# class Tag(models.Model):
-#     name = models.CharField(_("Name"),max_length=50,null=True,blank=True)
-
-#     def __str__(self):
-#         return self.name
-
 class Event(models.Model):
     name = models.CharField(_("Event"),max_length=50,null=True,blank=True)
     created_date = models.DateTimeField(default=now)
@@ -23,11 +16,6 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name
-    
-    # @property
-    # def get_tags(self):
-    #     tags = self.tags.all()
-    #     return tags  
     
     @property
     def get_tokens(self):

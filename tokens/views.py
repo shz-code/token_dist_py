@@ -1,12 +1,17 @@
-from django.shortcuts import render
-from .models import Token, Event, StudentList
-from django.http import JsonResponse, HttpResponse
 import math
 import json
-from django.utils.timezone import now
 import time
 
+from django.shortcuts import render
+from django.http import JsonResponse, HttpResponse
+from django.utils.timezone import now
+from django.contrib.auth.decorators import login_required
+
+from token_dist.decorators import admin_access
+from .models import Token, Event, StudentList
+
 # Create your views here.
+@admin_access
 def token(request, pk):
     event = Event.objects.get(id=pk)
 
@@ -23,6 +28,7 @@ def token(request, pk):
     }
     return render(request, "tokens.html", context)
 
+@admin_access
 def print_token(request, num, pk):
     event = Event.objects.get(id=pk)
     count = event.get_tokens_non_printed_count
@@ -73,6 +79,7 @@ def print_token(request, num, pk):
     }
     return render(request,"print_tokens.html",context)
 
+@admin_access
 def generate_tokens(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -92,6 +99,7 @@ def generate_tokens(request):
         Token.objects.bulk_create(bulk_list)
     return JsonResponse({"msg":"Ok"}, safe=False)
 
+@admin_access
 def update_print_status(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -107,6 +115,7 @@ def update_print_status(request):
         print(end-start)
     return JsonResponse({"msg":"Done"}, safe=False)
 
+@login_required
 def scanner_dist(request, pk):
     event = Event.objects.get(id=pk)
     context = {
@@ -114,6 +123,7 @@ def scanner_dist(request, pk):
     }
     return render(request, "scanner_dist.html",context)
 
+@login_required
 def scanner_receive(request, pk):
     event = Event.objects.get(id=pk)
     context = {
@@ -121,6 +131,7 @@ def scanner_receive(request, pk):
     }
     return render(request, "scanner_receive.html",context)
 
+@login_required
 def token_activate(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -156,6 +167,7 @@ def token_activate(request):
             return JsonResponse({"msg":msg}, safe=False)
     return JsonResponse({"msg":"No permission"}, safe=False)
 
+@login_required
 def token_activate_new(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -187,7 +199,7 @@ def token_activate_new(request):
             return JsonResponse({"msg":msg}, safe=False)
     return JsonResponse({"msg":"No permission"}, safe=False)
             
-
+@login_required
 def token_receive(request):
     if request.method == "POST":
         data = json.loads(request.body)

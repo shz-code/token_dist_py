@@ -1,20 +1,59 @@
+import json
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
+from django.utils.timezone import now
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.decorators import login_required
+
+from tablib import Dataset
+
 from users.models import EventPermission
 from tokens.models import Event, Token, StudentList
 from users.models import User
-from django.utils.timezone import now
-import json
-from django.conf import settings
-import time
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.decorators import login_required
-from tablib import Dataset
+from .decorators import admin_access
 
 # Create your views here.
 
 def index(request):
     return render(request, "index.html")
+
+@login_required
+def dashboard(request):
+    user = request.user
+    if user.is_admin:
+        context = {
+            "user": user,
+        }
+        return render(request, "dashboard_admin.html", context)
+    else:
+        permissions = EventPermission.objects.filter(user=user).order_by("id")
+        up_events = list()
+        prev_events = list()
+        for permission in permissions:
+            end_date = permission.event.event_date
+            current_date = now()
+            end_date = int(end_date.strftime('%Y%m%d%H%M'))
+            current_date = int(current_date.strftime('%Y%m%d%H%M'))
+            if end_date - current_date > 0:
+                up_events.append(permission.event)
+            else:
+                prev_events.append(permission.event)   
+
+        context = {
+            'user': user,
+            'up_events': up_events,
+            'prev_events': prev_events
+        }
+        return render(request, "dashboard_executive.html", context)
+    
+@login_required
+def account_settings(request):
+    user = request.user
+    context = {
+        'user': user
+    }
+    return render(request, "account_settings.html", context)
 
 def events(request):
     events = Event.objects.all()
@@ -94,6 +133,7 @@ def event(request, pk):
     else:
         return render(request, "event.html", context)
 
+@admin_access
 def event_stulist(request, pk):
     event = Event.objects.get(id = pk)
     stu_list = StudentList.objects.filter(event = event).count()
@@ -128,6 +168,7 @@ def event_stulist(request, pk):
         StudentList.objects.bulk_create(bulk_list)
     return render(request, "event_studentlist.html",context)
 
+@admin_access
 def event_update(request):
     if request.method == "POST":
         pk = request.POST.get('pk')
@@ -182,6 +223,7 @@ def event_update(request):
 
     return redirect(f'/event/{pk}')
 
+@admin_access
 def delete_event(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -189,10 +231,11 @@ def delete_event(request):
         # Event.objects.get(id=id).delete()
     return JsonResponse({"msg":"Deleted"},safe=False)
 
-
+@admin_access
 def create_user(request):
     return render(request, "create_user.html")
 
+@admin_access
 def create_user_post(request):
     if request.method == "POST":
         data = json.loads(request.body)
