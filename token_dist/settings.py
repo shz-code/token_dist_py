@@ -14,7 +14,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
-CSRF_TRUSTED_ORIGINS = ['https://token-dist-py.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://token-dist-cse.up.railway.app']
 
 # Application definition
 
