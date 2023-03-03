@@ -135,6 +135,7 @@
                 })
                 .then(async (response) => {
                     let res = await response.json();
+                    window.scrollTo(0, 0);
                     notification.innerHTML = alert_trigger("success",`${num} token(s) generated successfully! Please refresh the page to see update.`)
                     generateBtn.removeAttribute("disabled");
                     generateBtn.innerHTML = "Generate";
@@ -158,8 +159,8 @@
                 printNum.value = null;
             }
             else {
-                {% comment %} window.location = `http://127.0.0.1:8000/tokens/print_token/${num}/{{event.id}}`; {% endcomment %}
-                window.location = `https://token-dist-cse.up.railway.app/tokens/print_token/${num}/{{event.id}}`;
+                window.location = `http://127.0.0.1:8000/tokens/print_token/${num}/{{event.id}}`;
+                {% comment %} window.location = `https://token-dist-cse.up.railway.app/tokens/print_token/${num}/{{event.id}}`; {% endcomment %}
             }
         });
     </script>
