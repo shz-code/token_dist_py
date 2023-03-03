@@ -1,9 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap');
+
 :root {
---bg-color: #EBEBE8;
+--bg-color: #F5F5F5;
+--body-bg: #fff;
+--primary-color: ;
+}
+
+/* Utility Classes  */
+body{
+  background: var(--body-bg);
+  font-family: 'Nunito', sans-serif;
 }
 
 h1 {
 text-align: center;
+}
+
+.form-control{
+  padding: 0.5rem;
 }
 
 .card {
@@ -123,6 +137,14 @@ margin: 1rem 0;
   /* box-shadow: 3px 3px 20px 5px rgba(0, 0, 0, 0.192); */
   cursor: pointer;
   transition: 0.3s ease;
+}
+
+/* Login Page */
+
+.login_form{
+  max-width: 400px;
+  width: 100%;
+  margin: auto;
 }
 
 .validity_check.show {

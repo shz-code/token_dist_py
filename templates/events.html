@@ -9,12 +9,12 @@
 {% block body %}
 <div class="main">
 <div class="container">
-    <h1 class="title_header">Welcome to CSE</h1>
+    <h1 class="title_header fw-bold">Welcome <i class='bx bx-donate-heart'></i></h1>
     <div class="main_body">
     <!-- Upcoming Events -->
     <div class="events row gap-4 justify-content-center">
         {% if up_events %}
-            <h1>Upcoming Events</h1>
+            <h1 class="fw-bold">Upcoming Events</h1>
             {% for event in up_events %}
             <div class="event col-lg-5">
                 <div class="card">
@@ -66,7 +66,7 @@
     <!-- Previous Events -->
     <div class="events row gap-4 justify-content-center mt-4 prev_events">
         {% if prev_events %}
-            <h1>Previous Events</h1>
+            <h1 class="fw-bold">Previous Events</h1>
             {% for event in prev_events %}
             <div class="event col-lg-5">
                 <div class="card">
