@@ -158,8 +158,8 @@
                 printNum.value = null;
             }
             else {
-                window.location = `http://127.0.0.1:8000/tokens/print_token/${num}/{{event.id}}`;
-                {% comment %} window.location = `https://token-dist-cse.up.railway.app/tokens/print_token/${num}/{{event.id}}`; {% endcomment %}
+                {% comment %} window.location = `http://127.0.0.1:8000/tokens/print_token/${num}/{{event.id}}`; {% endcomment %}
+                window.location = `https://token-dist-cse.up.railway.app/tokens/print_token/${num}/{{event.id}}`;
             }
         });
     </script>
