@@ -5,6 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.utils.timezone import now
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import check_password
 
 from tablib import Dataset
 
@@ -22,8 +23,10 @@ def index(request):
 def dashboard(request):
     user = request.user
     if user.is_admin:
+        all_users = User.objects.all().exclude(id = user.id)
         context = {
             "user": user,
+            "all_users": all_users
         }
         return render(request, "dashboard_admin.html", context)
     else:
@@ -53,7 +56,57 @@ def account_settings(request):
     context = {
         'user': user
     }
+    if request.method == "POST":
+        name = request.POST.get("name")
+        phone = request.POST.get("phone")
+        email = request.POST.get("email")
+        userEdit = User.objects.get(id=user.id);
+        userEdit.name = name
+        userEdit.phone = phone
+        userEdit.email = email
+        userEdit.save()
+        context['success'] = "Account Updated Successfully"
+        context['user'] = userEdit
     return render(request, "account_settings.html", context)
+
+@login_required
+def update_password(request):
+    user = request.user
+    context = {
+        'user': user
+    }
+    if request.method == "POST":
+        prev_pass = request.POST.get("prevpass")
+        new_pass = request.POST.get("newpass")
+        userEdit = User.objects.get(id=user.id);
+        if user.check_password(prev_pass):
+            userEdit.password = make_password(new_pass)
+            userEdit.save()
+            context['success_pass'] = "Password Updated Successfully"
+        else:
+            print("Not matched") 
+            context['error'] = "Passwords do not match"
+    return render(request, "account_settings.html", context)
+
+@admin_access
+def delete_user(request):
+    user = request.user
+    all_users = User.objects.all().exclude(id = user.id)
+    context = {
+        "user": user,
+        "all_users": all_users
+    }
+    if request.method == "POST":    
+        user_id = request.POST.get("id")
+        try:
+            userDelete = User.objects.get(id = user_id)    
+            context['user_deleted'] = userDelete.username + " Deleted Successfully"
+            userDelete.delete()
+        except:
+            return redirect("dashboard")
+        all_users = User.objects.all().exclude(id = user.id)
+        context['all_users'] = all_users
+    return render(request, "dashboard_admin.html", context)
 
 def events(request):
     events = Event.objects.all()
@@ -159,6 +212,9 @@ def event_stulist(request, pk):
             context["type"] = type
             return render(request, "event_studentlist.html",context)
         
+        if(stu_list > 0):
+            StudentList.objects.filter(event = event).delete()
+        
         data = dataset.load(new_record.read(),format="xlsx")
         bulk_list = list()
         for datum in data:
@@ -166,6 +222,13 @@ def event_stulist(request, pk):
                 StudentList(student_id=datum[1],name = datum[2],event = event)
             )
         StudentList.objects.bulk_create(bulk_list)
+
+        status = True
+        msg = "Student list submitted successfully."
+        type = "success"
+        context["status"] = status
+        context["msg"] = msg
+        context["type"] = type
     return render(request, "event_studentlist.html",context)
 
 @admin_access
@@ -233,12 +296,43 @@ def delete_event(request):
     if request.method == "POST":
         data = json.loads(request.body)
         id = data['event_id']
-        # Event.objects.get(id=id).delete()
+        Event.objects.get(id=id).delete()
     return JsonResponse({"msg":"Deleted"},safe=False)
 
 @admin_access
 def create_user(request):
     return render(request, "create_user.html")
+
+@admin_access
+def create_event(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        place = request.POST.get('place')
+        date = request.POST.get('date')
+        time = request.POST.get('time')
+        token_start_date = request.POST.get('token_start_date')
+        token_start_time = request.POST.get('token_start_time')
+        token_end_date = request.POST.get('token_end_date')
+        token_end_time = request.POST.get('token_end_time')
+        desc = request.POST.get('desc')
+        usage = request.POST.get('usage')
+
+
+        time = date+" "+time+":00.000000"
+        token_start_time = token_start_date+" "+token_start_time+":00.000000"
+        token_end_time = token_end_date+" "+token_end_time+":00.000000"
+
+        Event.objects.create(
+            name = name,
+            event_date = time,
+            token_dist_start = token_start_time,
+            token_dist_end = token_end_time,
+            token_usage = usage,
+            distribution_place = place,
+            desc = desc
+        )
+        return redirect("dashboard")
+    return render(request, "create_event.html")
 
 @admin_access
 def create_user_post(request):

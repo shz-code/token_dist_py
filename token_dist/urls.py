@@ -10,6 +10,8 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboard/user', views.account_settings, name='account_settings'),
+    path('dashboard/update_password', views.update_password, name='update_password'),
+    path('dashboard/delete_user ',views.delete_user, name="delete_user"),
     path('events/', views.events, name='events'),
     # path('login/', LoginView.as_view() , name='login'),
     path('login/', LoginView.as_view(redirect_authenticated_user=True) , name='login'),
@@ -20,6 +22,7 @@ urlpatterns = [
     path('event_update/',views.event_update, name="event_update"),
     path('delete_event/',views.delete_event, name="delete_event"),
     path('create_user/',views.create_user, name="create_user"),
+    path('create_event/',views.create_event, name="create_event"),
     path('create_user_post/',views.create_user_post, name="create_user_post"),
 ]
 

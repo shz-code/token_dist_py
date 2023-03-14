@@ -91,10 +91,10 @@
                     <p class="lead">You are assigned to manage the token distribution of this event</p>
                 </div>
                 <div class="row text-center gap-4 justify-content-center">
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <a href="{% url 'tokens:scanner_dist' event.id %}" class="btn btn-primary btn-lg fw-bold">Token Distribution</a>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <a href="{% url 'tokens:scanner_receive' event.id %}" class="btn btn-warning btn-lg fw-bold">Token Receive</a>
                     </div>
                 </div>
@@ -107,7 +107,7 @@
                                 <p class="fw-bold mb-0">{{event.user.name}}</p>
                             </div>
                             <div class="col-lg-4">
-                                <a class="fw-bold text-dark" href="tel:0{{event.user.phone}}">0{{event.user.phone}}</a>
+                                <a class="fw-bold text-dark" href="tel:{{event.user.phone}}">{{event.user.phone}}</a>
                             </div>
                             <div class="col-lg-4">
                                 <p class="fw-bold mb-0">{{event.user.username}}</p>

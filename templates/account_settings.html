@@ -12,8 +12,15 @@
 <div class="main">
     <div class="container">
         <h1 class="title_header">Update Account</h1>
+        <div id="notification">
+            {% if success %}
+                <div class="alert alert-success" role="alert">
+                    <p class="mb-0">{{success}}</p>
+                </div>
+            {% endif %}
+        </div>
         <div class="main_body px-4">
-            <form id="user_form">
+            <form id="user_form" method="post">
                 {% csrf_token %}
                 <div class="row">
                     <p class="fw-bold text-secondary">Account Status - 
@@ -36,11 +43,11 @@
                         <input type="text" class="form-control readonly" value="{{user.username}}" disabled>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-2">
                     <div class="col-md-6 lead">
                         <label for="phone" class="form-label fw-bold">Phone</label>
                         {% if user.phone %}
-                            <input type="phone" class="form-control" id="phone" name="phone" value="0{{user.phone}}">
+                            <input type="phone" class="form-control" id="phone" name="phone" value="{{user.phone}}">
                             {% else %}
                             <input type="phone" class="form-control" id="phone" name="phone" value="" placeholder = "Ex: 0176****981">
                         {% endif %}
@@ -57,6 +64,43 @@
                 <div class="row justify-content-center mt-2">
                     <div class="row justify-content-center mt-2">
                         <button type="submit" class="btn btn-primary col-md-4 col-6" id="update_btn">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <h1 class="title_header">Update Account Password</h1>
+        <div id="notification">
+            {% if success_pass %}
+                <div class="alert alert-success" role="alert">
+                    <p class="mb-0">{{success_pass}}</p>
+                </div>
+            {% endif %}
+        </div>
+        <div id="notification">
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    <p class="mb-0">{{error}}</p>
+                </div>
+            {% endif %}
+        </div>
+        <div class="main_body px-4">
+            <form id="user_password_form" method="post" action="update_password">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md lead">
+                        <label for="prevpass" class="form-label fw-bold">Previous Password</label>
+                        <input required type="text" class="form-control" id="prevpass" name="prevpass" placeholder="Previous Password">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md lead">
+                        <label for="newpass" class="form-label fw-bold">New Password</label>
+                        <input required type="phone" class="form-control" id="newpass" name="newpass" placeholder="New Password">
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-2">
+                    <div class="row justify-content-center mt-2">
+                        <button type="submit" class="btn btn-warning col-md-4 col-6" id="update_btn">Update Password</button>
                     </div>
                 </div>
             </form>

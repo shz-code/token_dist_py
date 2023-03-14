@@ -16,6 +16,10 @@ h1 {
 text-align: center;
 }
 
+.cursor-pointer{
+  cursor: pointer;
+}
+
 .form-control{
   padding: 0.5rem;
 }
@@ -70,6 +74,12 @@ padding: 2rem 0;
 border-radius: 0.5rem;
 box-shadow: 3px 3px 20px 5px rgba(0, 0, 0, 0.192);
 margin-bottom: 1rem;
+}
+
+.main_body form{
+  max-width: 900px;
+  width: 100%;
+  margin: auto;
 }
 
 .prev_events .card p {
@@ -140,12 +150,6 @@ margin: 1rem 0;
 }
 
 /* Login Page */
-
-.login_form{
-  max-width: 400px;
-  width: 100%;
-  margin: auto;
-}
 
 .validity_check.show {
   display: block;

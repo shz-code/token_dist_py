@@ -5,7 +5,7 @@ from tokens.models import Event
 
 # Create your models here.
 class User(AbstractUser):
-    phone = models.IntegerField(_("Phone"),unique=True,blank=True,null=True)
+    phone = models.CharField(_("Phone"),unique=True,blank=True,null=True,max_length=15)
     name = models.CharField(max_length=50,null=True,blank=True)
     is_admin = models.BooleanField(default=False)
     is_executive = models.BooleanField(default=True)
