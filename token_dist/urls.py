@@ -6,14 +6,13 @@ from . import views
 from django.contrib.auth.views import LoginView , LogoutView
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboard/user', views.account_settings, name='account_settings'),
     path('dashboard/update_password', views.update_password, name='update_password'),
     path('dashboard/delete_user ',views.delete_user, name="delete_user"),
     path('events/', views.events, name='events'),
-    # path('login/', LoginView.as_view() , name='login'),
     path('login/', LoginView.as_view(redirect_authenticated_user=True) , name='login'),
     path('logout/', LogoutView.as_view() , name='logout'),
     path('tokens/',include('tokens.urls', namespace='tokens')),

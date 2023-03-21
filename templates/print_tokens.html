@@ -22,44 +22,46 @@
 <body>
     <h1 id="title" class="text-start">{{event.name}}</h1>
     <div class="meta_info">
-        <div id="print_conf">
-            <button type="button" class="btn btn-outline-secondary" onclick="qc()">Print Complete</button>
-        </div>
-        <div id="notification">
-
-        </div>
-        <p class="lead fw-bold">Printing Time: <span class="fw-normal">{{dt}}</span></p>
-        <p class="lead fw-bold">Total pages: <span class="fw-normal">{{total_pgs}}</span></p>
-        <p class="lead fw-bold">Batch print: <span class="fw-normal">{{num}} tokens</span></p>
-        <p class="lead fw-bold">Tokens: <span class="fw-normal">{{start_token}} - {{end_token}}</span></p>
-        <p class="lead fw-bold">Tokens per page: <span class="fw-normal">10</span></p>
-        <h4 class="fw-bold border-bottom mt-2">Token Index</h4>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Page Number</th>
-                    <th scope="col">Starting token id</th>
-                    <th scope="col">Ending token id</th>
-                    <th scope="col">Tokens</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for token in token_index %}
-                <tr class="table_row">
-                    <th scope="row">{{token.page}}</th>
-                    <td>{{token.starting_token}}</td>
-                    <td>{{token.finish_token}}</td>
-                    <td>{{token.count}}</td>
-                </tr>
-                {% endfor %}
-                <tr>
-                    <th scope="row"></th>
-                    <td></td>
-                    <td colspan="2">Total Tokens &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -> &nbsp; &nbsp; &nbsp; &nbsp;
-                        &nbsp; &nbsp; {{num}}</td>
-                </tr>
-            </tbody>
-        </table>
+        {% if num > 0 %}
+            <div id="print_conf">
+                <button type="button" class="btn btn-outline-success" onclick="qc()">Print</button>
+            </div>
+            <p class="lead fw-bold">Printing Date: <span class="fw-normal">{{dt|date:'M d, Y '}}</span></p>
+            <p class="lead fw-bold">Printed By: <span class="fw-normal">{{request.user.username}}</span></p>
+            <p class="lead fw-bold">Total pages: <span class="fw-normal">{{total_pgs}}</span></p>
+            <p class="lead fw-bold">Batch print: <span class="fw-normal">{{num}} tokens</span></p>
+            <p class="lead fw-bold">Tokens: <span class="fw-normal">{{start_token}} - {{end_token}}</span></p>
+            <p class="lead fw-bold">Tokens per page: <span class="fw-normal">10</span></p>
+            <h4 class="fw-bold border-bottom mt-2">Token Index</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Page Number</th>
+                        <th scope="col">Starting token id</th>
+                        <th scope="col">Ending token id</th>
+                        <th scope="col">Tokens</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for token in token_index %}
+                    <tr class="table_row">
+                        <th scope="row">{{token.page}}</th>
+                        <td>{{token.starting_token}}</td>
+                        <td>{{token.finish_token}}</td>
+                        <td>{{token.count}}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <th scope="row"></th>
+                        <td></td>
+                        <td colspan="2">Total Tokens &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -> &nbsp; &nbsp; &nbsp; &nbsp;
+                            &nbsp; &nbsp; {{num}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            {% else %}
+            <h2>No tokens are availabe for printing currently.<a href="{% url 'tokens:token_event' event.id %}"> Geneate new tokens</a> </h2>
+        {% endif %}
     </div>
     <div class="tokens_container">
         <div class="row justify-content-between gap-2">
@@ -109,27 +111,25 @@
         }
 
         function qc() {
-            let res = confirm("Printing Done? Click OK to update tokens status and wait for a few moment.");
-            if (res) {
-                console.log("Done");
-                fetch("/tokens/update_print_status/", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrf,
-                    },
-                    body: JSON.stringify({ 's_token_id': "{{start_token}}", 'total_tokens': "{{num}}" })
-                })
-                    .then(async (response) => {
-                        let res = await response.json();
-                        alert("Status updated");
-                        window.location.reload();
-                    })
-                    .catch(err => {
-                        alert("Error. Try again.")
-                        console.log(err)
-                    });
-            }
+            window.print();
+            alert("Updating token status. Please wait....");
+            fetch("/tokens/update_print_status/", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrf,
+                },
+                body: JSON.stringify({ 's_token_id': "{{first_token_id}}", 'total_tokens': "{{num}}" })
+            })
+            .then(async (response) => {
+                let res = await response.json();
+                alert("Printing Status Updated.");
+                window.location.reload();
+            })
+            .catch(err => {
+                alert("Error. Try again.")
+                console.log(err)
+            });
         }
     </script>
 </body>

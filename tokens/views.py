@@ -1,6 +1,5 @@
 import math
 import json
-import time
 
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
@@ -39,12 +38,15 @@ def print_token(request, num, pk):
 
     total_pgs = math.ceil(num/10)
 
+
     try:
-        st = tokens[0].token_serial
-        last_ck = tokens[num-1].token_serial
-        start_token = tokens[0].token_serial
-        end_token = tokens[num-1].token_serial
+        st = int(tokens[0].token_serial[8:])
+        last_ck = int(tokens[num-1].token_serial[8:])
+        start_token = int(tokens[0].token_serial[8:])
+        end_token = int(tokens[num-1].token_serial[8:])
+        first_token_id = tokens[0].id
     except:
+        first_token_id = 0
         st = 0
         last_ck = 0
         start_token = 0
@@ -75,7 +77,8 @@ def print_token(request, num, pk):
         "end_token": end_token,
         "token_index": token_index,
         "total_pgs": total_pgs+meta_pg,
-        "dt": dt
+        "dt": dt,
+        "first_token_id" : first_token_id
     }
     return render(request,"print_tokens.html",context)
 
@@ -89,12 +92,30 @@ def generate_tokens(request):
 
         bulk_list = list()
 
+        check_existing_tokens= Token.objects.filter(event = event).order_by('-id')[:1]
+        event_id_token = int(event_id) + 100
+        tmp = 10000
+
+        if len(check_existing_tokens) > 0:
+            tmp = int(check_existing_tokens[0].token_serial[8:])
+
         num = int(num)
         if num > 300:
             num = 300
+
+        # Token usage
+        if(event.token_usage == 1):
+            food_flag = True
+            entry_flag = False
+        if(event.token_usage == 2):
+            food_flag = True
+            entry_flag = True
+
         for i in range(num):
+            tmp = tmp + 1
+            token_sr = 'CSE-'+ str(event_id_token) + '-' + str(tmp)
             bulk_list.append(
-                Token(event=event)
+                Token(event=event,token_serial = token_sr,food_flag =food_flag, entry_flag = entry_flag)
             )
         Token.objects.bulk_create(bulk_list)
     return JsonResponse({"msg":"Ok"}, safe=False)
@@ -106,13 +127,12 @@ def update_print_status(request):
         num = data['total_tokens']
         starting_token_id = data['s_token_id']
         ending_token_id = int(starting_token_id) + int(num)
-        start = time.time()
+
         for i in range(int(starting_token_id),ending_token_id):
-            token = Token.objects.get(token_serial=i)
+            token = Token.objects.get(id=i)
             token.is_printed = True
             token.save()
-        end = time.time()
-        print(end-start)
+
     return JsonResponse({"msg":"Done"}, safe=False)
 
 @login_required
@@ -151,7 +171,7 @@ def token_activate(request):
             msg = "304"
             return JsonResponse({"msg":msg}, safe=False)
         try:
-            # token = Token.objects.get(token_serial="1845",event=event,is_printed=True)
+            # token = Token.objects.get(token_serial='CSE-101-10005',event=event,is_printed=True)
             token = Token.objects.get(token_serial=code,event=event,is_printed=True)
             if token.is_activated == True:
                 msg = "403"
@@ -209,8 +229,8 @@ def token_receive(request):
         msg = "404"
         event = Event.objects.get(id = event_id)
         try:
-            # token = Token.objects.get(token_serial=code,event=event,is_printed=True)
-            token = Token.objects.get(token_serial="1844",event=event,is_printed=True)
+            token = Token.objects.get(token_serial=code,event=event,is_printed=True)
+            # token = Token.objects.get(token_serial="CSE-101-10005",event=event,is_printed=True)
             if token.is_activated == False:
                 msg = "403"
                 return JsonResponse({"msg":msg}, safe=False)
@@ -235,4 +255,4 @@ def token_receive(request):
                         return JsonResponse({"msg":msg}, safe=False)
         except:
             return JsonResponse({"msg":msg}, safe=False)
-    return JsonResponse({"msg":"No premission"}, safe=False)
+    return JsonResponse({"msg":"No permission"}, safe=False)

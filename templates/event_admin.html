@@ -231,25 +231,23 @@
         eventUpdateBtn.setAttribute("disabled", true);
         delBtn.setAttribute("disabled", true);
         delBtn.innerHTML = spinner();
-
-        setTimeout(() => {
-            fetch("/delete_event/", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrf,
-                    },
-                    body: JSON.stringify({'event_id': "{{event.id}}" })
-                })
-                .then(async (response) => {
-                    let res = await response.json();
-                    window.location = "/dashboard/";
-                })
-                .catch(err => {
-                    console.log("Error");
-                    console.log(err)
-                });
-        }, 2000);
+        
+        fetch("/delete_event/", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrf,
+                },
+                body: JSON.stringify({'event_id': "{{event.id}}" })
+            })
+            .then(async (response) => {
+                let res = await response.json();
+                window.location = "/dashboard/";
+            })
+            .catch(err => {
+                console.log("Error");
+                console.log(err)
+            });
     });
 </script>
 {% endblock scripts %}
