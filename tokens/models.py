@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from datetime import datetime  
 from django.utils.timezone import now  
+import uuid
 
 class Event(models.Model):
     name = models.CharField(_("Event"),max_length=50,null=True,blank=True)
@@ -38,6 +39,7 @@ class Event(models.Model):
         return tokens  
 
 class Token(models.Model):
+    id = models.BigAutoField(primary_key=True,editable=False)
     event = models.ForeignKey(Event,verbose_name=_("Event"),on_delete=models.CASCADE,null=True,blank=True)
     token_serial = models.CharField(_("Serial"),max_length=20,null=True,blank=True)
     is_printed = models.BooleanField(_("Printed"),default=False)
@@ -50,7 +52,7 @@ class Token(models.Model):
         verbose_name_plural = "Tokens"
     
     def __str__(self):
-        return f'{self.event} - {self.id}'
+        return f'{self.event} - {self.id} - {self.token_serial}'
     
 
 class StudentList(models.Model):
