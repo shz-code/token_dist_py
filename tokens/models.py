@@ -1,8 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from datetime import datetime  
 from django.utils.timezone import now  
-import uuid
 
 class Event(models.Model):
     name = models.CharField(_("Event"),max_length=50,null=True,blank=True)
